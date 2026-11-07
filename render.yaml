@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: hub-operacional
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --config gunicorn.conf.py app:app
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: TZ
+        value: America/Sao_Paulo
+      - key: DATABASE_URL
+        sync: false
+      - key: HUB_ACCESS_USER
+        sync: false
+      - key: HUB_ACCESS_PASSWORD
+        sync: false
+      - key: HUB_ADMIN_PIN
+        sync: false

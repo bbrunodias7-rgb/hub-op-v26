@@ -1,0 +1,113 @@
+HUB OPERACIONAL v26 (Render)
+Novidades v26:
+- Limpar quadros em Carregamento XPT e Recebimento, com confirmação e acesso ADM: retira as alocações de todos os quadros somente da Labor atual. Colaboradores permanecem no banco exclusivo; não apaga veículos, status, tempos, relatórios nem equipes históricas de finalização.
+- Subsetor removido do cadastro e edição de veículos de Recebimento. Registros antigos mantêm o valor interno para não mudar previsões existentes; novos registros usam o padrão Volumoso no cálculo atual.
+- Pop-ups de métricas/localização fecham ao trocar de menu, atualizar a tela, sair, pressionar Escape, rolar a página ou tocar fora.
+- Verificado localmente com sessão ADM: cancelamento/limpeza nas duas Labors, persistência após recarga, preservação de veículos e relatórios, edição sem Subsetor e pop-ups entre menus; 61 testes Python e todos os conjuntos JS aprovados.
+- Faça backup e publique o pacote no serviço Flask existente no Render, preservando banco e variáveis. Não testado no Render real; não altera a prévia Lovable.
+
+Histórico v25:
+HUB OPERACIONAL v25 (Render)
+Novidades v25:
+- XPT e Recebimento usam o mesmo quadro responsivo: vaga, veículos, status e equipe com nomes legíveis.
+- XPT aceita vários veículos por quadro, cada um com ID e status independente. A equipe é compartilhada pela vaga; finalizar um veículo registra uma cópia da equipe naquele momento.
+- Registros antigos XPT são migrados sem apagar nomes, cargos ou equipes. Não substitua o banco de produção.
+- Central de Reports lista cada veículo individualmente, incluindo sua vaga no texto enviado ao WhatsApp.
+- Auto-Escalar por PLS mostra prévia e aplica somente após confirmação ADM, preservando postos preenchidos e bancos exclusivos. XPT usa PLS Aduana; Recebimento usa PLS Volumoso; apoios não sistêmicos usam suas avaliações.
+- Direcionamento por PLS: ADM informa quantas pessoas precisa por Labor, confere a prévia e confirma. Só usa colaboradores disponíveis e sem direcionamento; não transfere pessoas de outro banco.
+- O slot REP II fica vazio se não houver REP II disponível; não substitui o cargo por REP.
+- Testes locais: 61 Python, todos os conjuntos JS, navegador com login ADM, múltiplos veículos/salvamento/reload/reports, escala e direcionamento confirmados, XPT e Recebimento no computador e celular.
+- Render real e métricas reais da operação não foram testados. Fazer backup antes da implantação e manter as variáveis de ambiente e o banco existentes.
+- Arquivos novos: static/labor-engine.js, static/v25.js e static/v25.css; publique também app.py, static/v24.js e templates/index.html atualizados.
+- O HTML integrado v25 continua dependendo do servidor Flask e de suas APIs; não funciona sozinho no GitHub Pages nem substitui a prévia Lovable.
+
+Histórico v24:
+Novidades v24:
+- Labor Recebimento em tabela (cabeçalho amarelo, tags de status e barra de tempo em vaga), separado do Carregamento/XPT (entrada x saída).
+- Tempo Previsto em vaga = volume ÷ soma(UNT do subsetor × PLS) da equipe; sem equipe usa a média cadastrada. Vale para Recebimento e Pistas SVC/XD (timer fica vermelho quando passa do previsto).
+- Relatório do Recebimento: ID, Serviço, Motorista 1/2, Cavalo, Carreta, Origem, Destino, Status (FINALIZADO / DOCA XX / AGUAR: DOCA / PENDENTE), Processamento AM/PM, Destino ETD. Copiar para WhatsApp e exportar CSV.
+- Problem Solver: painel exclusivo do PS (cargo OPSII) e ADM; sem indicadores de tempo; passagem de turno só pelo PS.
+- POPs editáveis (incluir, editar, excluir) por ADM, TL e PS; botão só nas Labors e no Painel PS.
+- Relatar Parada e Chat recolhidos numa aba lateral (⋯) no canto direito.
+O arquivo Hub_Operacional_completo.html precisa do app.py (APIs + banco) rodando no Render.
+
+HUB OPERACIONAL v23 — NOVIDADES
+- Visual industrial: fundo #090A0F, setores #12151E, vagas vazias silenciosas que acendem ao arrastar.
+- Barra única no topo (48px), menu lateral em ícones com painel de vidro, pílulas Esteira/Volumoso/Recebimento/Pista SVC/XD/XPT.
+- Perfil (círculo com iniciais) guarda o botão Sair. Banco de Reps flutuante com aba "Banco (n)".
+- Botão "Gerar Imagem do Briefing" (PNG) e modo TV: só pessoas alocadas, primeiro nome + função, cores por cargo
+  (REP II azul, OPS II verde, OPS III laranja, EXTRA vermelho).
+- Botão de emergência para todos os usuários (faixa vermelha + sirene até 'Ciente'; ADM/TL encerram).
+- Sons: chat, novas tarefas PS e chamados urgentes (caixa "Urgente" em Tarefas e Pedidos ao TL). Botão de som liga/desliga.
+- POPs (procedimentos) a um clique; ADM adiciona e exclui.
+- Painel PS: resolvidos, tempo médio, SLA 30 min, postos atendidos e pendentes; "Finalizar meu turno" gera a passagem.
+- Cronômetro ao lado do status (ex.: OCIOSO 12 min), mapa de calor e distintivos bronze/prata/ouro na Matriz de Talentos.
+- Auto-Escalar só sugere nomes pelo maior PLS e compara com o HC da Calculadora (não aloca ninguém).
+- Alerta ao colocar alguém com nota baixa/sem treino no posto: "Deseja mantê-lo?".
+- Ilhas sem pacotes ficam apagadas (30%).
+
+HUB OPERACIONAL v22 — ADM edita/exclui bases (nome e TL responsável); editar colaborador não duplica; OPS II/OPS III/TL fora dos postos das Labors; botão Desfazer (Ctrl+Z).
+
+HUB OPERACIONAL v21 — Labor Expedição & Reports
+
+Histórico das alterações anteriores
+
+NOVAS REGRAS
+- Sem direcionamento manual, o colaborador não aparece em nenhuma Labor nem banco Labor, mesmo se havia um posto antigo.
+- Um direcionamento define um único banco. Recebimento, Esteira, Volumoso (Chão) e Volumoso em Esteira têm destinos separados.
+- Direcionamentos antigos para múltiplos setores ficam sem banco até uma nova escolha manual. Atividades diferentes dentro da Auditoria continuam no mesmo banco.
+- A escala nunca direciona para Labors. T alimenta o G&G geral como ESCALADO, não PRESENTE. PM/SD usam D; MID AM/AM usam D-1.
+- O G&G geral registra presença. O G&G setorial e os cards registram OPERANDO, OCIOSO ou 5S em campo independente. Alocar não confirma presença.
+- Cards do banco e dos postos têm status e símbolos por cargo. Edição contextual PLS/UNT removida; métricas somente por carregamento bruto.
+- Apoio inferior esquerdo azul virou OPERADOR INDUÇÃO nas duas Esteiras.
+- GOL continua único, com postos Pescadores, Etiquetadores e Movimentadores. Nomes antigos do GOL migram uma única vez para Movimentadores, sem duplicação.
+
+BANCO GESTACIONAL
+1. ADM cadastra um usuário com cargo TL e um colaborador com cargo TL.
+2. Em Banco Gestacional, ADM cria/atualiza uma base com nome, usuário responsável e TL cadastrado. Depois vincula os colaboradores.
+3. Escala mostra apenas REP e REP II vinculados às bases do TL conectado; ADM vê todas as bases. Sem base criada e vinculada, a escala fica vazia.
+4. Um dos dois TLs solicita a transferência informando colaborador, origem e destino. O outro TL aprova ou nega. A pessoa só muda de base após aprovação.
+5. Bases antigas conservam os vínculos, mas ADM precisa cadastrar a base e seu usuário responsável para ativar a escala.
+6. Recarregar ou salvar uma tela antiga não apaga bases nem decisões de transferência; esses campos são controlados pelo servidor.
+
+INSTALAÇÃO
+- Faça backup do banco existente antes de substituir o código. Não exclua o volume SQLite nem altere DATABASE_URL.
+- Atualize app.py, templates/index.html, static/script.js e static/style.css juntos.
+- Hub_Operacional_completo.html contém HTML/CSS/JS, mas ainda depende das APIs de app.py: não funciona sozinho em GitHub Pages.
+- Mantidos Gunicorn com um worker, Render/Neon e SQLite com volume. Consulte GUIA_RENDER_NEON.md.
+- Mantidas as credenciais internas existentes. O login passa a ser validado no servidor; usuários precisam entrar novamente após atualização.
+- HUB_ACCESS_USER e HUB_ACCESS_PASSWORD continuam obrigatórios; não publique segredos no GitHub.
+- Recomenda-se HUB_SESSION_SECRET estável (segredo aleatório longo) e HUB_SECURE_COOKIES=1 em hospedagem HTTPS. Sem HUB_SESSION_SECRET, o servidor usa HUB_ACCESS_PASSWORD para assinar a sessão. Trocar esse segredo encerra as sessões.
+- O PIN de usuários não é mais enviado ao navegador. ADM pode deixar o PIN vazio ao editar para manter o existente.
+
+VERIFICAÇÃO
+- 37 testes Python de importações, armazenamento, acesso e transferências aprovados em SQLite.
+- Testes JS anteriores adaptados às novas regras e seis testes v18 aprovados.
+- Navegador: ADM monta bases; T/AM dia 5 sobe como Escalado em dia 4; sem direcionamento banco vazio; direcionamento manual e alocação em Operador Indução; status Ocioso sem mudar presença; TL solicita, outro TL aprova; pessoa aparece na escala do destino após recarregar; bases verificadas em celular.
+- Não verificado nesta entrega: contas reais Render/Neon, conexão PostgreSQL real, metas reais P/H e formatos CSV reais não fornecidos.
+
+v19 - Acesso ADM garantido
+- O usuário brunreis é sempre ADM com acesso total (não pode ser rebaixado).
+- Login aceita maiúsculas/minúsculas e espaços extras no usuário/PIN.
+- Recuperação: defina HUB_ADMIN_PIN no Render e reinicie; o PIN do brunreis passa a ser esse valor.
+
+== v20 — Banco Gestacional ==
+- ADM reconhecido mesmo com cargo escrito "Administrador", "admin" etc.; TL aceita "tl", "TL " etc.
+- Para criar base basta: nome da base + usuário TL. O TL no cadastro é opcional (usa o nome do usuário).
+- As listas não se resetam mais enquanto você escolhe (atualização automática preservava errado).
+- ADM pode transferir colaboradores direto; TLs continuam pedindo e o outro TL aprova.
+- Mensagens de erro agora explicam o motivo; sessão expirada pede novo login.
+
+== v21 — Labor Expedição & Reports ==
+- Menu sem Controle Gate: Labor Pista SVC (01–27), Labor Pista XD (28–58), Labor Carregamento XPT e Central de Reports (WhatsApp).
+- Vagas mantêm rotas e pacotes. Arraste REPs do banco exclusivo, ou use Alocar REP com busca. Apenas ADM altera as alocações.
+- Corrigido bug antigo: limpeza do banco XD apagava o REP da SVC (e vice-versa) após sincronização.
+- XPT mantém os seis quadros anteriores, agora como seis vagas de carregamento: nome do veículo, Carreta/Truck/Toco, vaga editável e status. Carreta é apenas o valor inicial editável, não cadastro de frota real.
+- Equipes antigas são preservadas. Finalizar veículo registra data, responsável e cópia da equipe; reabra antes de alterar a equipe.
+- Central de Reports: selecione Finalizado/Pendente e informe os motivos. Texto simples copiado pela API do navegador (HTTPS necessário no Render), sem envio automático ao WhatsApp.
+- A frase “Não ficou nenhum caminhão aguardando em vaga” segue exatamente o modelo solicitado: confira essa informação antes de compartilhar.
+- Passagem de Turno salva observações e cópia dos veículos no banco existente; o próximo usuário ADM diferente do autor recebe o aviso e confirma Ciente.
+- Avisos são protegidos de apagamento por salvamento de uma tela antiga.
+- Atualize também static/reports.js junto com app.py, static/script.js, static/style.css e templates/index.html. Faça backup antes. NÃO substitua/exclua seu banco nem DATABASE_URL.
+- HTML completo continua dependente do servidor Flask no Render. A prévia TanStack do Lovable não foi substituída.
+- Testes: suíte Python, testes JS e navegador local com login ADM, alocação persistente, clipboard real e segundo ADM recebendo aviso. Render/Neon reais não foram acessados.

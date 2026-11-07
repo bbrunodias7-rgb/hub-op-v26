@@ -1,0 +1,46 @@
+/* Hub v24 */
+.v24-abas { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0 10px; }
+.v24-abas .btn-primary { margin-left: auto; width: auto; }
+.v24-sub { margin: 18px 0 8px; color: #ffe600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.v24-tabela-wrap { overflow-x: auto; border: 1px solid #262b3a; border-radius: 8px; }
+.v24-tabela { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
+.v24-tabela th { background: #ffe600; color: #111; font-weight: 900; text-transform: uppercase; font-size: 11px; padding: 8px 6px; text-align: left; white-space: nowrap; position: sticky; top: 0; }
+.v24-tabela td { padding: 7px 6px; border-top: 1px solid #1f2433; background: #12151E; vertical-align: middle; white-space: nowrap; }
+.v24-tabela tr:nth-child(even) td { background: #0f1219; }
+.v24-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-weight: 900; font-size: 11px; letter-spacing: .03em; }
+.v24-tag.ok { background: #16a34a; color: #fff; }
+.v24-tag.doca { background: #2563eb; color: #fff; }
+.v24-tag.aguar { background: #f59e0b; color: #111; }
+.v24-tag.pend { background: #475569; color: #fff; }
+.v24-barra { position: relative; width: 120px; height: 18px; background: #0D0F17; border: 1px solid #2a3042; border-radius: 4px; overflow: hidden; }
+.v24-barra i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #16a34a, #84cc16); }
+.v24-barra.estourou i { background: #dc2626; }
+.v24-barra span { position: relative; z-index: 1; display: block; text-align: center; font-weight: 800; font-size: 11px; line-height: 16px; color: #fff; }
+.v24-acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+.v24-prev { font-size: 11px; color: #cbd5e1; margin: 4px 0; }
+.vaga-timer-badge.v24-estourou { background: #dc2626 !important; color: #fff !important; animation: v24pisca 1s infinite; }
+@keyframes v24pisca { 50% { opacity: .55; } }
+.v24-modal { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 9000; display: none; align-items: center; justify-content: center; padding: 12px; }
+.v24-modal.aberto { display: flex; }
+.v24-modal-box { background: #12151E; border: 1px solid #2a3042; border-radius: 10px; width: min(760px, 100%); max-height: 90vh; display: flex; flex-direction: column; padding: 14px; }
+.v24-modal-corpo { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.v24-modal-rodape { display: flex; gap: 8px; justify-content: flex-end; padding-top: 10px; flex-wrap: wrap; }
+.v24-modal-rodape .btn-primary { width: auto; }
+.v24-form { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.v24-form label { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: #94a3b8; }
+/* PS sem indicadores de tempo */
+#view-lab_ps_individual .v23-timer, #view-lab_ps_gestao .v23-timer { display: none !important; }
+/* Gaveta dos botões flutuantes */
+.v24-gaveta { position: fixed; right: 0; bottom: 90px; z-index: 4600; display: flex; align-items: flex-end; flex-direction: row-reverse; }
+.v24-gaveta-aba { position: relative; width: 22px; height: 54px; border: 1px solid #2a3042; border-right: 0; border-radius: 8px 0 0 8px; background: #1a1f2c; color: #ffe600; font-size: 18px; font-weight: 900; cursor: pointer; opacity: .75; }
+.v24-gaveta-aba:hover { opacity: 1; }
+.v24-gaveta-badge { position: absolute; top: -6px; left: -6px; background: #dc2626; color: #fff; border-radius: 999px; font-size: 10px; padding: 1px 5px; }
+.v24-gaveta-itens { display: none; flex-direction: column; gap: 8px; padding: 8px; background: #12151E; border: 1px solid #2a3042; border-radius: 10px 0 0 10px; }
+.v24-gaveta.aberta .v24-gaveta-itens { display: flex; }
+.v24-gaveta.aberta .v24-gaveta-aba { opacity: 1; }
+.v24-gaveta-itens .v23-fab, .v24-gaveta-itens .chat-fab { position: static !important; inset: auto !important; margin: 0 !important; transform: none !important; box-shadow: none; }
+.v24-gaveta-itens .v23-fab span { display: inline !important; }
+.v24-abas .btn-doca-sm, #v24-receb .reports-toolbar .btn-doca-sm { flex: 0 0 auto; width: auto; padding: 6px 12px; }
+.v24-abas .btn-doca-sm.ativo { background: #ffe600; color: #111; }
+.v24-abas .btn-primary { padding: 6px 12px; }
+#v24-receb .reports-toolbar { display: flex; gap: 8px; margin-top: 8px; }

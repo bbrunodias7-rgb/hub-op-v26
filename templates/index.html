@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hub Operacional SGO03</title><meta name="description" content="Gestão operacional SGO03: colaboradores, labors, tarefas e expedição."><meta property="og:title" content="Hub Operacional SGO03"><meta property="og:description" content="Gestão de labors, colaboradores e expedição SGO03."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/v23.css">
+    <link rel="stylesheet" href="/static/v24.css">
+    <link rel="stylesheet" href="/static/v25.css">
+</head>
+<body>
+
+    <!-- ECRÃ DE LOGIN -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-logo">
+                <span class="app-logo">HUB</span>
+                <span>Operacional SGO03</span>
+            </div>
+            <div class="login-sub">Introduza as suas credenciais corporativas</div>
+            <div id="login-erro" class="login-erro"></div>
+            <div class="form-group">
+                <label>Utilizador (@usuario)</label>
+                <input type="text" id="login-user" class="form-control" placeholder="ex: brunreis" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Palavra-passe (PIN)</label>
+                <input type="password" id="login-pass" class="form-control" placeholder="••••" onkeypress="if(event.key==='Enter') fazerLogin()">
+            </div>
+            <button class="btn-primary-full" onclick="fazerLogin()">Entrar no Sistema</button>
+            <div class="login-assinatura">DESENVOLVIDO POR BRUNO REIS OPSII</div>
+        </div>
+    </div>
+
+    <!-- SHELL PRINCIPAL -->
+    <div id="app-shell" class="app-shell" style="display: none;">
+
+        <!-- BARRA LATERAL DE MENUS COM ROLAGEM CONTÍNUA -->
+        <nav id="pista-drawer" class="pista-drawer">
+            <div class="drawer-header">
+                <div class="drawer-title">
+                    <span class="app-logo">HUB</span>
+                    <span>Menu Operacional</span>
+                </div>
+                <button class="btn-close-drawer" onclick="toggleDrawer()" title="Recolher menu lateral">✕</button>
+            </div>
+
+            <div class="drawer-scroll-content">
+                <div class="gaveta-grupo aberta" id="g-home">
+                    <button class="gaveta-titulo" onclick="toggleGaveta('g-home')">
+                        <span>🏠 Início</span><span>▼</span>
+                    </button>
+                    <div class="gaveta-itens">
+                        <button class="btn-drawer-item ativo" id="sub-home_dashboard" onclick="mudarSubmenu('home_dashboard')">Painel de Boas-Vindas</button>
+                    </div>
+                </div>
+
+                <div class="gaveta-grupo aberta" id="g-colab">
+                    <button class="gaveta-titulo" onclick="toggleGaveta('g-colab')">
+                        <span>👤 Colaborador & Matrizes</span><span>▼</span>
+                    </button>
+                    <div class="gaveta-itens">
+                        <button class="btn-drawer-item" id="sub-colab_cadastro" onclick="mudarSubmenu('colab_cadastro')">Cadastro Colaborador</button>
+                        <button class="btn-drawer-item" id="sub-colab_presenca" onclick="mudarSubmenu('colab_presenca')">G&G</button>
+                        <button class="btn-drawer-item" id="sub-colab_direcionamento" onclick="mudarSubmenu('colab_direcionamento')">Direcionamento</button>
+                        <button class="btn-drawer-item" id="sub-colab_talentos" onclick="mudarSubmenu('colab_talentos')">Talentos (Matriz PLS/UNT)</button>
+                        <button class="btn-drawer-item" id="sub-colab_escala" onclick="mudarSubmenu('colab_escala')">Escala de Trabalho</button>
+                    </div>
+                </div>
+
+                <div class="gaveta-grupo aberta" id="g-labors">
+                    <button class="gaveta-titulo" onclick="toggleGaveta('g-labors')">
+                        <span>⚡ Labors & Produtividade</span><span>▼</span>
+                    </button>
+                    <div class="gaveta-itens">
+                        <button class="btn-drawer-item" id="sub-lab_calc" onclick="mudarSubmenu('lab_calc')">Calculadora HC</button>
+                        <button class="btn-drawer-item" id="sub-lab_otimizacao" onclick="mudarSubmenu('lab_otimizacao')">Otimização de Labor</button>
+                        <button class="btn-drawer-item" id="sub-lab_esteira" onclick="mudarSubmenu('lab_esteira')">Labor Esteira</button>
+                        <button class="btn-drawer-item" id="sub-lab_vol_chao" onclick="mudarSubmenu('lab_vol_chao')">Labor Volumoso em Chão</button>
+                        <button class="btn-drawer-item" id="sub-lab_vol_esteira" onclick="mudarSubmenu('lab_vol_esteira')">Labor Volumoso em Esteira</button>
+                        <button class="btn-drawer-item" id="sub-lab_auditoria" onclick="mudarSubmenu('lab_auditoria')">Labor Auditoria & Otimização</button>
+                        <button class="btn-drawer-item" id="sub-lab_layout" onclick="mudarSubmenu('lab_layout')">Labor Layout</button>
+                        <button class="btn-drawer-item" id="sub-lab_recebimento" onclick="mudarSubmenu('lab_recebimento')">Labor Recebimento</button>
+                        <button class="btn-drawer-item" id="sub-lab_ps_gestao" onclick="mudarSubmenu('lab_ps_gestao')">Gestão Problem Solver (PS)</button>
+                        <button class="btn-drawer-item" id="sub-lab_ps_individual" onclick="mudarSubmenu('lab_ps_individual')">Problem Solver (PS)</button>
+                        <button class="btn-drawer-item" id="sub-lab_hh" onclick="mudarSubmenu('lab_hh')">Hora a Hora (H/H)</button>
+                    </div>
+                </div>
+
+                <div class="gaveta-grupo aberta" id="g-exp">
+                    <button class="gaveta-titulo" onclick="toggleGaveta('g-exp')">
+                        <span>🚚 LABOR EXPEDIÇÃO &amp; REPORTS</span><span>▼</span>
+                    </button>
+                    <div class="gaveta-itens">
+                        <button class="btn-drawer-item" id="sub-exp_mapa_svc" onclick="mudarSubmenu('exp_mapa_svc')">Labor Pista SVC (Vagas 01-27)</button>
+                        <button class="btn-drawer-item" id="sub-exp_mapa_xd" onclick="mudarSubmenu('exp_mapa_xd')">Labor Pista XD (Vagas 28-58)</button>
+                        <button class="btn-drawer-item" id="sub-exp_xpt" onclick="mudarSubmenu('exp_xpt')">Labor Carregamento XPT</button>
+                        <button class="btn-drawer-item" id="sub-exp_reports" onclick="mudarSubmenu('exp_reports')">Central de Reports (WhatsApp) <span class="reports-new">NOVO</span></button>
+                    </div>
+                </div>
+
+                <div class="gaveta-grupo aberta" id="g-adm">
+                    <button class="gaveta-titulo" onclick="toggleGaveta('g-adm')">
+                        <span>⚙️ Administração (ADM)</span><span>▼</span>
+                    </button>
+                    <div class="gaveta-itens">
+                        <button class="btn-drawer-item" id="sub-adm_gestacional" onclick="mudarSubmenu('adm_gestacional')">Banco Gestacional</button>
+                        <button class="btn-drawer-item" id="sub-adm_csv" onclick="mudarSubmenu('adm_csv')">Carregar .CSV & Dados</button>
+                        <button class="btn-drawer-item" id="sub-adm_usuarios" onclick="mudarSubmenu('adm_usuarios')">Gestão de Utilizadores</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ÁREA CENTRAL -->
+        <div class="module-wrapper">
+            <header class="global-header">
+                <div class="header-left">
+                    <button class="btn-toggle-drawer" onclick="toggleDrawer()">☰ Menu</button>
+                    <div class="header-title">
+                        <span id="label-setor-topo">Painel de Boas-Vindas</span>
+                        <span class="badge-tela-ativa" id="badge-cargo-ativo">ADM</span>
+                    </div>
+                </div>
+                <div class="toolbar-actions">
+                    <button class="btn-pessoal" id="btn-gente-gestao" onclick="abrirModalGenteGestao()" style="display:none;">👥 GENTE & GESTÃO / OCIOSOS</button>
+                    <button class="btn-toggle-drawer" id="btn-toggle-pool-topo" onclick="toggleSidebarRight()" style="display:none;">📋 Banco Lateral</button>
+                    <span id="ferramenta-exportar-labor" style="display:none; gap:6px; align-items:center;"><select class="form-control" id="imagem-segunda-labor" aria-label="Labors no arquivo"><option value="lab_vol_chao">Esteira + Volumoso em Chão</option><option value="lab_vol_esteira">Esteira + Volumoso em Esteira</option></select><button class="btn-doca-sm" style="width:auto; padding:7px 12px;" onclick="exportarLaborCSV()">📄 Exportar Labors (.csv)</button></span>
+                    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+                </div>
+            </header>
+
+            <!-- BARRA DE ALERTAS DE PEDIDOS DE APOIO ENTRE LABORS / PISTAS -->
+            <div id="barra-pedidos-apoio-gg" class="barra-solicitacoes" style="display:none;"></div>
+
+            <main class="view-section" id="main-content-area">
+
+                <!-- PAINEL DE BOAS-VINDAS -->
+                <div id="view-home_dashboard" class="view-panel" style="display: flex;">
+                    <div class="rel-box welcome-hero">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div style="text-align:left;">
+                                <div class="welcome-badge">PAINEL DE BOAS-VINDAS</div>
+                                <h2>Olá, <span id="home-nome-usuario">OPERADOR</span>!</h2>
+                                <p class="sub-hint">Aceda rapidamente aos seus atalhos favoritos ou personalize o seu painel:</p>
+                            </div>
+                            <button class="btn-primary-full" style="width:auto;" onclick="abrirModalConfigurarFavoritos()">⭐ Configurar Meus Atalhos Favoritos</button>
+                        </div>
+                        <div class="welcome-shortcuts" id="container-atalhos-favoritos"></div>
+                    </div>
+                </div>
+
+                <!-- CADASTRO DE COLABORADOR (COM REP E OPS III) -->
+                <div id="view-colab_cadastro" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Cadastro de Colaborador</h3>
+                        <div class="form-cadastro-grid">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" id="cad-colab-nome" class="form-control" placeholder="Nome completo do colaborador">
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo</label>
+                                <select id="cad-colab-vinculo" class="form-control" onchange="verificarVinculoCadastro()">
+                                    <option value="REP">REP</option>
+                                    <option value="REP II">REP II</option>
+                                    <option value="OPSII (PS)">OPSII (PS)</option>
+                                    <option value="OPS III">OPS III</option>
+                                    <option value="TL">TL</option>
+                                    <option value="EXTRA">EXTRA</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="grupo-usuario-login" style="display: none;">
+                                <label>Vincular @usuário (opcional)</label>
+                                <input type="text" id="cad-colab-login" class="form-control" placeholder="ex: brunreis">
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <button class="btn-primary-full" style="max-width:240px;" onclick="salvarColaboradorCadastro()">💾 Salvar Colaborador</button>
+                        </div>
+                    </div>
+
+                    <div class="rel-box">
+                        <h3>Colaboradores Registados (<span id="count-cad-colabs">0</span>)</h3><div class="cadastro-toolbar"><input id="busca-cadastro" class="form-control" placeholder="Buscar nome ou cargo" aria-label="Buscar colaborador" oninput="renderizarTabelaCadastroColabs()"><button id="excluir-selecionados" class="btn-doca-sm" disabled onclick="excluirColaboradoresSelecionados()">🗑️ Excluir selecionados</button></div>
+                        <div class="table-scroll">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" aria-label="Selecionar todos" onchange="selecionarTodosColaboradores(this.checked)"></th><th>Nome</th>
+                                        <th>Cargo</th>
+                                        <th>@Usuário</th>
+                                        <th>Radar (Matriz)</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-cad-colabs"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- G&G (PRESENÇA, INTERVALO COM RETORNO, OCIOSO, DSR, AFASTADO, .CSV) -->
+                <div id="view-colab_presenca" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span>G&G — Controle de Presença, Intervalo, Ociosidade, DSR e Afastados</span>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <input type="text" id="filtro-presenca-nome" class="form-control" placeholder="🔍 Filtrar nome..." oninput="renderizarTabelaPresenca()">
+                                <button class="btn-primary-full" style="width:auto; background:#10b981; color:#000;" onclick="exportarPresencaCSV()">📥 Exportar .CSV Presença e Faltas</button>
+                            </div>
+                        </h3>
+                        <div class="table-scroll" style="margin-top:10px;">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th>Colaborador</th>
+                                        <th>Cargo</th>
+                                        <th>Radar</th>
+                                        <th>Status Atual & Retorno</th>
+                                        <th>Ações de Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-presenca-colabs"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DIRECIONAMENTO -->
+                <div id="view-colab_direcionamento" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span>Direcionamento Manual — Presentes e Escalados</span>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <input type="text" id="filtro-dir-nome" class="form-control" placeholder="🔍 Filtrar presente..." oninput="renderizarTabelaDirecionamento()">
+                                <button class="btn-doca-sm" style="width:auto; padding:8px 12px;" onclick="limparTodoDirecionamento()">🧹 Limpar</button>
+                            </div>
+                        </h3>
+                        <div class="table-scroll" style="margin-top: 10px;">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th>Colaborador</th>
+                                        <th>Processamento<br><small>(Recebimento, Volumoso, Esteira)</small></th>
+                                        <th>Auditoria e Otimização<br><small>(Auditoria SCV, Otimização XPT, Mov. Gaiolas)</small></th>
+                                        <th>Expedição<br><small>(Aduanda SVC, Aduanda XD, Carregamento XPT)</small></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-direcionamento-reps"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATRIZ DE TALENTOS -->
+                <div id="view-colab_escala" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Escala de Trabalho — Mensal
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <input type="month" id="escala-mes" class="form-control" style="width:auto;" aria-label="Mês da escala" onchange="document.getElementById('escala-data').value='';renderizarEscalaTrabalho()">
+                                <input type="date" id="escala-data" class="form-control" aria-label="Data da escala" onchange="selecionarDataEscala(this.value)">
+                                <select id="escala-tl" class="form-control" aria-label="Filtrar por TL" onchange="renderizarEscalaTrabalho()"></select>
+                                <select id="escala-turno" class="form-control" aria-label="Filtrar por turno" onchange="renderizarEscalaTrabalho()"></select>
+                                <input type="search" id="escala-busca" class="form-control" style="width:auto;" placeholder="Buscar colaborador" aria-label="Buscar colaborador" oninput="renderizarEscalaTrabalho()">
+                                <button class="btn-doca-sm" style="width:auto; padding:7px 12px;" onclick="preConfigurarEscala5x2()">⚙ Pré-configurar 5x2</button>
+                                <button class="btn-doca-sm" style="width:auto; padding:7px 12px;" onclick="aplicarEscalaHojeManual()">📋 Aplicar hoje no G&G</button>
+                                <button class="btn-doca-sm" style="width:auto; padding:7px 12px;" onclick="limparEscalaTrabalho()">🧹 Limpar escala</button>
+                                <button class="btn-primary-full" style="width:auto;" onclick="exportarEscalaCSV()">⬇ Exportar .csv</button>
+                            </div>
+                        </h3>
+                        <div class="table-scroll" id="tabela-escala-trabalho"></div>
+                        <details class="turnos-especiais"><summary>Escalas especiais</summary><div class="cadastro-toolbar">
+                            <input type="hidden" id="turno-id"><input id="turno-nome" class="form-control" placeholder="Nome do turno" aria-label="Nome do turno especial">
+                            <input type="time" id="turno-inicio" class="form-control" aria-label="Entrada do turno especial" value="08:00"><input type="time" id="turno-fim" class="form-control" aria-label="Saída do turno especial" value="18:00">
+                            <select id="turno-ref" class="form-control" aria-label="Referência de entrada"><option value="0">D — próprio dia</option><option value="-1">D-1 — dia anterior</option></select>
+                            <button class="btn-doca-sm" onclick="gravarTurnoEspecialForm()">💾 Salvar turno</button></div><div id="turnos-especiais-lista"></div></details>
+                    </div>
+                </div>
+
+                <div id="view-colab_talentos" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span>Matriz de Talentos — Produtividade Líquida Sistêmica (PLS) & Unitização (UNT)</span>
+                            <input type="text" id="filtro-talentos-nome" class="form-control" style="max-width:260px;" placeholder="🔍 Buscar na Matriz..." oninput="renderizarTabelaTalentos()">
+                        </h3>
+                        <div class="table-scroll" style="max-height: 620px;">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th>Representantes</th>
+                                        <th>Radar</th>
+                                        <th>PLS volumoso</th>
+                                        <th>UNT volumoso</th>
+                                        <th>PLS bancada</th>
+                                        <th>Unt bancada</th>
+                                        <th>PLS sorting</th>
+                                        <th>UNT sorting</th>
+                                        <th>PLS aduanda</th>
+                                        <th>UNT aduanda</th>
+                                        <th>Aval. não sistêmica</th>
+                                        <th>Aval. 5s</th>
+                                        <th>Aval. volumoso</th>
+                                        <th>Aval. bancada</th>
+                                        <th>Aval. sorting</th>
+                                        <th>Aval. aduanda</th>
+                                        <th>Aval. operador</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-talentos-matriz"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OTIMIZAÇÃO DE LABOR -->
+                <div id="view-lab_otimizacao" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Otimização de Labor — IDs em letras</h3>
+                        <p style="font-size:12px;">Crie as letras, toque nos IDs (carrinhos) para selecionar e toque em “Colocar aqui” na letra. As letras aparecem no menu lateral "Ilhas" da Labor.</p>
+                        <div id="container-otimizacao-labor"></div>
+                    </div>
+                </div>
+
+                <!-- CALCULADORA HC -->
+                <div id="view-lab_calc" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Calculadora HC — Dimensionamento de Processo</h3>
+                        <div class="form-cadastro-grid">
+                            <div class="form-group"><label>Volume Total Esperado (Dia)</label><input type="number" id="calc-vol" class="form-control" value="9000" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>% Volumoso</label><input type="number" id="calc-pct-vol" class="form-control" value="10" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Horas de Processo</label><input type="number" step="0.5" id="calc-hrs" class="form-control" value="4.0" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Horas Trabalhadas</label><input type="number" step="0.5" id="calc-hrs-trab" class="form-control" value="2.0" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Meta Indução/Bancada (p/h)</label><input type="number" id="calc-meta-ban" class="form-control" value="1200" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Meta Sorting (p/h)</label><input type="number" id="calc-meta-sor" class="form-control" value="280" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Meta Pesca (p/h)</label><input type="number" id="calc-meta-pes" class="form-control" value="400" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Volumoso feito em (conta no HC necessário)</label><select id="calc-modo-vol" class="form-control" onchange="calcularCalculadoraHC()"><option value="chao">Chão</option><option value="esteira">Esteira</option></select></div>
+                            <div class="form-group"><label>Vol. Chão • On bip P/H</label><input type="number" id="calc-ph-onbip" class="form-control" value="280" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Vol. Chão • Otimização P/H</label><input type="number" id="calc-ph-otim" class="form-control" value="150" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Vol. Chão • Separação P/H</label><input type="number" id="calc-ph-sep" class="form-control" value="50" oninput="calcularCalculadoraHC()"></div>
+                        </div>
+                        <div class="form-cadastro-grid" style="margin-top:12px;">
+                            <div class="form-group"><label>HC atual (total da equipe)</label><input type="number" min="0" step="1" id="calc-hc-atual" class="form-control" placeholder="G&G automático" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>ABS / faltas</label><input type="number" min="0" step="1" id="calc-hc-abs" class="form-control" placeholder="G&G automático" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>Afastados</label><input type="number" min="0" step="1" id="calc-hc-afastado" class="form-control" placeholder="G&G automático" oninput="calcularCalculadoraHC()"></div>
+                            <div class="form-group"><label>DSR</label><input type="number" min="0" step="1" id="calc-hc-dsr" class="form-control" placeholder="G&G automático" oninput="calcularCalculadoraHC()"></div>
+                        </div>
+                        <div id="painel-calculadora-hc" style="margin-top: 16px;"></div>
+                    </div>
+                </div>
+
+                <!-- LABOR ESTEIRA & LABOR VOLUMOSO EM ESTEIRA (6 BANCADAS EM 3 LINHAS + ILHAS SEPARADAS POR LETRA + GOL) -->
+                <div id="view-lab_esteira" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span id="titulo-esteira-ativa">Labor Esteira</span>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="btn-primary-full" style="width:auto;" onclick="autoEscalarEsteiraAtivaPorPLS()">⚡ Auto-Escalar por PLS</button>
+                                <button class="btn-doca-sm" style="width:auto; padding:7px 12px;" onclick="limparEsteiraAtiva()">🧹 Limpar Tabuleiro</button>
+                                <button class="btn-doca-sm btn-desfazer" style="width:auto; padding:7px 12px;" onclick="desfazerUltimaAcao()" disabled title="Ctrl+Z">↩ Desfazer</button>
+                            </div>
+                        </h3>
+                        <div id="container-esteira-ilhas" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+
+                <!-- LABOR VOLUMOSO EM CHÃO (MANTIDA INTACTA CONFORME APROVADO) -->
+                <div id="view-lab_vol_chao" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span>Labor Volumoso em Chão — 5 Bancadas (1 ONbip + 3 Apoios), Separadores LM/XPT (20 vagas) & Extras</span>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-primary-full" style="width:auto;" onclick="autoEscalarVolumosoChao()">⚡ Auto-Escalar Volumoso Chão</button>
+                                <button class="btn-doca-sm" style="width:auto; padding:7px 12px;" onclick="limparVolumosoChao()">🧹 Limpar</button>
+                            </div>
+                        </h3>
+                        <div id="container-volumoso-chao"></div>
+                    </div>
+                </div>
+
+                <!-- LABOR AUDITORIA & OTIMIZAÇÃO -->
+                <div id="view-lab_auditoria" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3><span>Labor Auditoria e Otimização</span><button class="btn-doca-sm" onclick="limparTabuleiroAuditoria()">🧹 Limpar Tabuleiro</button></h3>
+                        <div id="container-labor-auditoria"></div>
+                    </div>
+                </div>
+
+                <!-- GESTÃO PROBLEM SOLVER (MÚLTIPLOS POSTOS + TAREFAS COM REP APOIO E FOTO + PAINEL SOLICITAÇÕES) -->
+                <div id="view-lab_ps_gestao" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3><span>Quadro de Mensagens — Apoio & Pedidos ao TL</span><button class="btn-doca-sm" onclick="limparQuadroMensagensPS()">🧹 Limpar quadro</button></h3>
+                        <div id="painel-alertas-apoio-ps"></div>
+                    </div>
+
+                    <div class="rel-box">
+                        <h3>Escala de Postos de Trabalho Problem Solver (Múltiplos Postos Permitidos)</h3>
+                        <div class="table-scroll">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th>Operador OPS III / PS</th>
+                                        <th>Selecionar Múltiplos Postos de Trabalho PS</th>
+                                        <th>REP para Apoio</th>
+                                        <th>Direcionamento Extra</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-gestao-postos-ps"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="rel-box">
+                        <h3>Ferramenta de Tarefas PS — Criar e Atribuir Tarefa a um Problem Solver</h3>
+                        <div class="form-cadastro-grid">
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Descrição da Tarefa</label>
+                                <input type="text" id="ps-nova-tarefa-desc" class="form-control" placeholder="Descreva a tarefa a ser executada...">
+                            </div>
+                            <div class="form-group">
+                                <label>Atribuir ao PS</label>
+                                <select id="ps-nova-tarefa-resp" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>REP para Apoio na Tarefa</label>
+                                <select id="ps-nova-tarefa-rep-apoio" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Carregar Foto (Apagada ao fim da tarefa)</label>
+                                <input type="file" id="ps-nova-tarefa-foto" accept="image/*" class="form-control">
+                            </div>
+                            <button class="btn-primary-full" onclick="criarTarefaPS()">➕ Criar & Atribuir Tarefa</button>
+                        </div>
+                        <div class="table-scroll" style="margin-top:12px;">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        <th>Tarefa & Foto</th>
+                                        <th>PS Responsável</th>
+                                        <th>REP Apoio</th>
+                                        <th>Status & Justificativa</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-lista-tarefas-ps"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROBLEM SOLVER INDIVIDUAL (4 ABAS: POSTO, TAREFAS, MURAL DÚVIDAS C/ FOTO, PEDIDOS AO TL) -->
+                <div id="view-lab_ps_individual" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Problem Solver — Painel Individual (<span id="lbl-ps-user" style="color:var(--primary);"></span>)</h3>
+                        <div class="gate-tabs" style="margin-bottom:12px; flex-wrap:wrap;">
+                            <button class="gate-tab-btn ativo" id="btn-ps-aba-posto" onclick="alternarAbaPSIndividual('posto')">📍 Meus Postos Escalados</button>
+                            <button class="gate-tab-btn" id="btn-ps-aba-tarefas" onclick="alternarAbaPSIndividual('tarefas')">📋 Minhas Tarefas</button>
+                            <button class="gate-tab-btn" id="btn-ps-aba-duvidas" onclick="alternarAbaPSIndividual('duvidas')">💬 Mural de Dúvidas</button>
+                            <button class="gate-tab-btn" id="btn-ps-aba-tl" onclick="alternarAbaPSIndividual('tl')">👑 Pedidos ao TL</button>
+                        </div>
+                        <div id="painel-ps-individual-conteudo"></div>
+                    </div>
+                </div>
+
+                <!-- HORA A HORA -->
+                <div id="view-lab_hh" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Hora a Hora (H/H) — Processo (Máximo 6 Horas) & Poka Yoke</h3>
+                        <div class="table-scroll">
+                            <table class="tabela-perfis" id="tabela-hh-completa">
+                                <thead>
+                                    <tr>
+                                        <th>Hora Processo</th>
+                                        <th>Produtividade Bancada<br><small>meta da Calculadora HC</small></th>
+                                        <th>Produtividade Sorting<br><small>meta da Calculadora HC</small></th>
+                                        <th>Produtividade Volumoso<br><small>meta On bip P/H</small></th>
+                                        <th>Poka Yoke (%)<br><small>Meta: 99,13%</small></th>
+                                        <th>Gaiola_Errada</th>
+                                        <th>QR_Sem_PokaYoke</th>
+                                        <th>Problema_QR</th>
+                                        <th>Forçou_Saída</th>
+                                        <th>Falha_PokaYoke</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-hh-6horas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPEDIÇÃO & PISTA (SVC VAGAS 01-27 | XD VAGAS 28-58) -->
+                <div id="view-operacao" class="view-panel" style="display: none;">
+                    <div class="kpi-dashboard" id="expedicao-kpis"></div>
+                    <div class="rel-box">
+                        <h3>
+                            <span id="pista-titulo-setor">Mapa de Pista — Vagas</span>
+                            <input type="search" id="busca-vagas-labor" class="form-control" aria-label="Buscar vaga ou rota" placeholder="Buscar vaga ou rota" oninput="filtrarVagasLabor(this.value)">
+                        </h3>
+                        <div class="grid" id="grid-vagas-pista"></div>
+                    </div>
+                </div>
+
+                <!-- CARREGAMENTO XPT -->
+                <div id="view-exp_xpt" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span>Labor Carregamento XPT</span>
+                            <span id="resumo-carregamento"></span>
+                        </h3>
+                        <div class="xpt-equipes-grid" id="container-6-quadros-xpt"></div>
+                    </div>
+                </div>
+
+                <div id="view-lab_layout" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3><span>Labor Layout — 5 vagas</span><button class="btn-doca-sm" onclick="limparLaborLayout()">🧹 Limpar</button></h3>
+                        <div id="container-labor-layout"></div>
+                    </div>
+                </div>
+
+                <div id="view-lab_recebimento" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>
+                            <span>Labor Recebimento — Entrada / Descarga</span>
+                            <button class="btn-primary-full" style="width:auto;" onclick="autoEscalarXPTPorNaoSistemica()">⚡ Sugerir Equipes</button>
+                        </h3>
+                        <div id="v24-receb"></div>
+                        <h4 class="v24-sub" id="v24-receb-eq-titulo">Equipes de descarga</h4>
+                        <div class="xpt-equipes-grid" id="container-quadros-receb"></div>
+                    </div>
+                </div>
+
+                <div id="view-exp_reports" class="view-panel" style="display:none">
+                    <div class="reports-heading"><h2>Central de Reports</h2><span class="reports-new">WHATSAPP</span></div>
+                    <div class="reports-tabs" role="tablist" aria-label="Reports">
+                        <button class="btn-doca-sm ativo" id="report-tab-xpt" role="tab" aria-selected="true" onclick="mudarAbaReports('xpt')">Report XPT's</button>
+                        <button class="btn-doca-sm" id="report-tab-handover" role="tab" aria-selected="false" hidden onclick="mudarAbaReports('handover')">Passagem de Turno</button>
+                    </div>
+                    <div class="reports-toolbar"><label>Turno<select id="report-turno" class="form-control" onchange="atualizarPreviewReports()"><option>PM</option><option>SD</option><option>MID AM</option><option>AM</option></select></label><span id="report-data"></span></div>
+                    <section id="reports-xpt" role="tabpanel"><div id="reports-veiculos"></div><h3 class="reports-subtitle">Report</h3><pre id="report-preview" class="report-preview"></pre><button class="btn-primary-full reports-copy" onclick="copiarReportXPT()">📋 Copiar Report para WhatsApp</button></section>
+                    <section id="reports-handover" role="tabpanel" hidden><label for="report-observacoes">Observações para o próximo turno</label><textarea id="report-observacoes" class="form-control reports-notes" rows="9" oninput="atualizarPreviewReports()"></textarea><pre id="handover-preview" class="report-preview"></pre><div class="reports-toolbar"><button class="btn-doca-sm" onclick="copiarResumoTurno()">📋 Gerar e Copiar Resumo</button><button class="btn-primary-full reports-copy" id="btn-finalizar-turno" onclick="finalizarTurnoLabor()">✓ Finalizar Turno e Salvar</button></div><div id="historico-passagens"></div></section>
+                </div>
+
+                <!-- ADMINISTRAÇÃO (CARREGAR .CSV E DADOS — SEM NUMERAÇÃO DE LISTA) -->
+                <div id="view-adm_gestacional" class="view-panel" style="display:none"><div class="rel-box"><h3>Banco Gestacional</h3>
+<div id="gestacional-criar" class="cadastro-toolbar"><input id="base-nome" class="form-control" placeholder="Nome da base" aria-label="Nome da base"><select id="base-usuario" class="form-control" aria-label="Usuário responsável"></select><select id="base-tl" class="form-control" aria-label="TL cadastrado"></select><button class="btn-primary" onclick="criarBaseGestao()">Criar / atualizar base</button></div>
+<div class="cadastro-toolbar"><input type="search" id="gestacional-busca" class="form-control" placeholder="Buscar colaborador" aria-label="Buscar na base gestacional" oninput="renderizarBancoGestacional()"><select id="gestacional-tl" class="form-control" aria-label="Filtrar base gestacional" onchange="renderizarBancoGestacional()"></select></div><p id="gestacional-resumo" class="sub-hint"></p><div class="table-scroll" id="gestacional-tabela"></div>
+<h3>Transferências entre bases</h3><div id="transfer-form" class="cadastro-toolbar"><select id="transfer-colaborador" class="form-control" aria-label="Colaborador da transferência"></select><select id="transfer-origem" class="form-control" aria-label="Base de origem" onchange="renderizarBancoGestacional()"></select><select id="transfer-destino" class="form-control" aria-label="Base de destino"></select><button class="btn-primary" onclick="solicitarTransferenciaBase()">Solicitar transferência</button></div><div id="gestacional-pedidos" class="quadro-mensagens"></div></div></div>
+                <div id="view-adm_csv" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Carregar Ficheiro .CSV — Cadastro de Colaboradores</h3>
+                        <p class="sub-hint">Carregue um ficheiro <code>.csv</code> contendo apenas Nome e Cargo:</p>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                            <input type="file" id="file-csv-bruto-colabs" accept=".csv,.txt,.tsv" class="form-control" style="max-width:380px;">
+                            <button class="btn-primary-full" style="max-width:260px;" onclick="enviarArquivoCSVBruto('colaboradores')">📥 Importar Cadastro de Colaboradores</button>
+                        </div>
+                    </div>
+
+                    <div class="rel-box">
+                        <h3>Carregar Ficheiro .CSV Bruto — Matriz de Talentos (Extração Automática)</h3>
+                        <p class="sub-hint">Selecione diretamente o ficheiro <code>.csv</code> bruto da Matriz de Talentos (PLS, UNT e Avaliações):</p>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                            <input type="file" id="file-csv-bruto-matriz" accept=".csv,.txt,.tsv" class="form-control" style="max-width:380px;">
+                            <button class="btn-primary-full" style="max-width:260px;" onclick="enviarArquivoCSVBruto('matriz')">📥 Carregar .CSV Bruto da Matriz</button>
+                        </div>
+                    </div>
+
+                    <div class="rel-box">
+                        <h3>Carregar Ficheiro .CSV Bruto — Otimização das Rotas — Labors e Calculadora HC</h3>
+                        <p class="sub-hint">Colunas reconhecidas: <code>ID Planejado | ID Otimizado | Detalhe do roteiro | Tipos de serviços | Quantidade de sacas | Tipo de Veículo | Pacotes estimados</code>. IDs Otimizados da mesma letra criam uma Ilha na Esteira (XPT = Lado XPT | Outros = Lado LM) e somam o total de pacotes do dia:</p>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                            <input type="file" id="file-csv-bruto-rotas" accept=".csv,.txt,.tsv" class="form-control" style="max-width:380px;">
+                            <button class="btn-primary-full" style="max-width:260px; background:var(--success); color:#000;" onclick="enviarArquivoCSVBruto('rotas')">📦 Importar Otimização das Rotas</button>
+                        </div>
+                    </div>
+                    <div class="rel-box"><h3>Otimização da Expedição — Pistas</h3><div class="cadastro-toolbar"><input type="file" id="file-csv-bruto-expedicao" accept=".csv,.txt,.tsv" class="form-control"><button class="btn-primary-full" onclick="enviarArquivoCSVBruto('expedicao')">🚚 Importar Otimização da Expedição</button></div></div>
+                </div>
+
+                <div id="view-adm_usuarios" class="view-panel" style="display: none;">
+                    <div class="rel-box">
+                        <h3>Criar / Editar Utilizador e Níveis de Acesso</h3>
+                        <div class="form-cadastro-grid">
+                            <div class="form-group">
+                                <label>@Usuário (Login)</label>
+                                <input type="text" id="adm-user-login" class="form-control" placeholder="ex: brunreis">
+                            </div>
+                            <div class="form-group">
+                                <label>Nome Exibido</label>
+                                <input type="text" id="adm-user-nome" class="form-control" placeholder="ex: BRUNO REIS">
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo (Exibido no Chat)</label>
+                                <select id="adm-user-cargo" class="form-control">
+                                    <option value="OPS III">OPS III</option>
+                                    <option value="OPSII">OPSII</option>
+                                    <option value="TL">TL</option>
+                                    <option value="REP2">REP2</option>
+                                    <option value="REP">REP</option>
+                                    <option value="ADM">ADM</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Senha (PIN)</label>
+                                <input type="text" id="adm-user-senha" class="form-control" placeholder="ex: 4251">
+                            </div>
+                        </div>
+
+                        <div class="permissoes-box">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <label style="font-size:11px; font-weight:800; color:var(--primary);">NÍVEIS DE ACESSO (MARQUE AS FERRAMENTAS LIBERADAS):</label>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="btn-doca-sm" style="width:auto; padding:4px 8px;" onclick="marcarTodosAcessosADM(true)">Marcar Todos</button>
+                                    <button class="btn-doca-sm" style="width:auto; padding:4px 8px;" onclick="marcarTodosAcessosADM(false)">Desmarcar Todos</button>
+                                </div>
+                            </div>
+                            <div class="grid-permissoes" id="grid-checkboxes-permissoes"></div>
+                        </div>
+
+                        <div style="margin-top:12px;">
+                            <button class="btn-primary-full" style="max-width:260px;" onclick="salvarUsuarioADM()">💾 Salvar Utilizador e Acessos</button>
+                        </div>
+                    </div>
+
+                    <div class="rel-box">
+                        <h3>Utilizadores Cadastrados</h3>
+                        <div class="table-scroll">
+                            <table class="tabela-perfis">
+                                <thead>
+                                    <tr>
+                                        <th>@Usuário</th>
+                                        <th>Nome no Chat</th>
+                                        <th>PIN</th>
+                                        <th>Acessos Liberados</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-usuarios-adm"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- SIDEBAR DIREITA: BANCO DE REPS + CARDS DE STATUS DE ROTAS (COM CANCELAR ENTRADA/SAÍDA) -->
+        <aside id="sidebar-right" class="sidebar-right" style="display: none;">
+            <div class="sidebar-tabs">
+                <button class="tab-btn ativo" id="tab-reps" onclick="alternarAbaSidebar('reps')">👥 Banco de Reps</button>
+                <button class="tab-btn" id="tab-rotas" onclick="alternarAbaSidebar('rotas')" style="display:none;">🚚 Status Rotas</button>
+                <button class="btn-close-sidebar" onclick="toggleSidebarRight()">✕</button>
+            </div>
+            <div class="list-container" id="lista-reps-container" ondragover="event.preventDefault();" ondrop="dropDevolverRepAoBanco(event)">
+                <div class="rep-header">
+                    <h3 id="titulo-pool-individualizado">Disponíveis no Tabuleiro</h3>
+                    <input type="text" id="busca-pool-lateral" class="form-control" placeholder="🔍 Filtrar colaborador..." oninput="renderizarPoolIndividualizado()">
+                </div>
+                <div class="rep-list" id="pool-colaboradores-lista"></div>
+            </div>
+            <div class="list-container hidden" id="lista-rotas-container">
+                <div class="rep-header">
+                    <h3>Status das Rotas (Cancelar Erro Gate)</h3>
+                </div>
+                <div class="rep-list" id="pool-rotas-lista"></div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- MODAL GENTE & GESTÃO (COMPARTILHAMENTO DE OCIOSOS + PEDIR APOIO COM QUANTIDADE) -->
+    <div class="modal-overlay" id="modal-gente-gestao" style="display: none;">
+        <div class="modal-box" style="max-width: 980px;">
+            <div class="modal-header">
+                <h3>👥 GENTE & GESTÃO — <span id="lbl-modal-gg-setor">Ferramenta</span></h3>
+                <button class="btn-close-sidebar" onclick="fecharModalGenteGestao()">✕</button>
+            </div>
+            <div style="padding: 12px 18px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:rgba(11,15,25,0.6);">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-size:12px; font-weight:800; color:var(--primary);">🤝 Solicitar Apoio de Outra Área:</span>
+                    <input type="number" id="gg-qtd-apoio" class="form-control" value="1" min="1" max="20" style="width:70px;" title="Quantidade de colaboradores solicitados">
+                    <select id="gg-setor-alvo-apoio" class="form-control" style="width:220px;">
+                        <option value="Labor Esteira">Pedir à Labor Esteira</option>
+                        <option value="Labor Volumoso">Pedir à Labor Volumoso</option>
+                        <option value="Pista SVC">Pedir à Pista SVC</option>
+                        <option value="Pista XD">Pedir à Pista XD</option>
+                        <option value="Carregamento XPT">Pedir ao Carregamento XPT</option>
+                    </select>
+                    <button class="btn-primary-full" style="width:auto;" onclick="enviarPedidoApoioGG()">📢 Pedir Apoio</button>
+                </div>
+
+            </div>
+            <div style="padding: 12px 18px; overflow-y:auto; max-height:70vh;">
+                <input type="search" id="busca-gg-modal" class="form-control" style="margin-bottom:10px;" placeholder="🔍 Buscar colaborador" aria-label="Buscar colaborador" oninput="abrirModalGenteGestao()">
+                <h4 style="color:var(--primary); font-size:12px; margin-bottom:8px;">Minha Equipa na Ferramenta Atual</h4>
+                <div class="modal-grid-colaboradores" id="grid-modal-gente-gestao" style="padding:0; margin-bottom:16px;"></div>
+
+                <h4 style="color:var(--warning); font-size:12px; margin-bottom:8px;">🟡 Colaboradores Ociosos Disponíveis nas Áreas Parceiras (Clique para Puxar)</h4>
+                <div class="modal-grid-colaboradores" id="grid-modal-ociosos-parceiros" style="padding:0;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ATENDER PEDIDO DE APOIO -->
+    <div class="modal-overlay" id="modal-atender-apoio" style="display: none;">
+        <div class="modal-box" style="max-width: 560px;">
+            <div class="modal-header">
+                <h3>✅ Atender pedido de apoio</h3>
+                <button class="btn-close-sidebar" onclick="fecharAtenderPedidoApoio()">✕</button>
+            </div>
+            <div style="padding: 14px 16px; display:flex; flex-direction:column; gap:10px;">
+                <div id="info-atender-apoio" style="font-size:13px; font-weight:800; color:var(--primary);"></div>
+                <input type="search" id="busca-atender-apoio" class="form-control" placeholder="🔍 Buscar colaborador" aria-label="Buscar colaborador" oninput="renderizarListaAtenderApoio()">
+                <div id="lista-atender-apoio" class="lista-atender-apoio"></div>
+                <button class="btn-primary-full" onclick="confirmarAtenderPedidoApoio()">📤 Enviar selecionados e fechar pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURAR ATALHOS FAVORITOS -->
+    <div class="modal-overlay" id="modal-favoritos" style="display: none;">
+        <div class="modal-box" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>⭐ Configurar Meus Atalhos Favoritos</h3>
+                <button class="btn-close-sidebar" onclick="fecharModalConfigurarFavoritos()">✕</button>
+            </div>
+            <div style="padding: 16px;">
+                <div class="grid-permissoes" id="grid-checkboxes-favoritos"></div>
+                <button class="btn-primary-full" style="margin-top:14px;" onclick="salvarMeusFavoritos()">💾 Salvar Meus Favoritos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VISUALIZAR FOTO TEMPORÁRIA PS -->
+    <div class="modal-overlay" id="modal-ver-foto-ps" style="display: none;">
+        <div class="modal-box" style="max-width: 680px; text-align:center; padding:16px;">
+            <div class="modal-header">
+                <h3>📷 Evidência Fotográfica (Temporária)</h3>
+                <button class="btn-close-sidebar" onclick="document.getElementById('modal-ver-foto-ps').style.display='none'">✕</button>
+            </div>
+            <div id="container-img-modal-ps" style="padding:14px;"></div>
+        </div>
+    </div>
+
+    <!-- POP-UP FLUTUANTE DO RADAR -->
+    <div id="radar-popup-tooltip" class="radar-popup-tooltip" style="display:none;"></div>
+
+    <!-- CHAT FLUTUANTE (COM PRIVACIDADE REAL) -->
+    <button class="chat-fab" id="btn-chat-fab" onclick="toggleChatWindow()">💬 Chat <span class="badge-chat" id="badge-chat-count">0</span></button>
+    <div class="chat-window" id="chat-window" style="display: none;">
+        <div class="chat-header">
+            <span>💬 Chat Operacional</span>
+            <button class="btn-close-sidebar" onclick="toggleChatWindow()">✕</button>
+        </div>
+        <div class="chat-selector-bar">
+            <select id="chat-destinatario" class="chat-select-destino" onchange="carregarMensagensChat()">
+                <option value="GERAL">🌍 Todos na Operação (Público)</option>
+            </select>
+        </div>
+        <div class="chat-messages" id="chat-messages-container"></div>
+        <div class="chat-input-bar">
+            <input type="text" id="chat-input-texto" class="chat-win-input" placeholder="Escreva uma mensagem..." onkeypress="if(event.key==='Enter') enviarMensagemChat()">
+            <button class="btn-chat-send" onclick="enviarMensagemChat()">Enviar</button>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+    <script src="/static/reports.js"></script>
+    <script src="/static/v23.js"></script>
+    <script src="/static/v24.js"></script>
+    <script src="/static/labor-engine.js"></script>
+    <script src="/static/v25.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+data
+*.db
+*.db-*
+*.sqlite*
+__pycache__
+.venv
+node_modules
+tests
+*.md
+*.txt
+!requirements.txt
+Hub_Operacional_completo.html
